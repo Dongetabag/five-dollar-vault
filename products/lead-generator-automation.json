@@ -1,0 +1,214 @@
+{
+  "name": "$5 Vault - Lead Generator Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-gen",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "Start Here",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "lead-gen-5vault"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "query",
+              "name": "searchQuery",
+              "value": "={{ $json.body?.searchQuery || $json.searchQuery || 'dentists Los Angeles' }}",
+              "type": "string"
+            },
+            {
+              "id": "industry",
+              "name": "industry",
+              "value": "={{ $json.body?.industry || $json.industry || 'Healthcare' }}",
+              "type": "string"
+            },
+            {
+              "id": "limit",
+              "name": "maxResults",
+              "value": "={{ $json.body?.maxResults || $json.maxResults || 10 }}",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "id": "config",
+      "name": "Configure Search",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/compass~crawler-google-places/run-sync-get-dataset-items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"searchStringsArray\": [\"{{ $json.searchQuery }}\"],\n  \"maxCrawledPlacesPerSearch\": {{ $json.maxResults }},\n  \"language\": \"en\"\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "apify",
+      "name": "Scrape Google Maps",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 0],
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "YOUR_APIFY_CREDENTIAL_ID",
+          "name": "Apify API Token"
+        }
+      },
+      "notes": "Get free Apify account: apify.com (1000 results/month free)"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const item = $input.item.json;\n\nreturn {\n  businessName: item.title || 'N/A',\n  phone: item.phone || 'N/A',\n  website: item.website || 'N/A',\n  address: item.address || 'N/A',\n  rating: item.totalScore || 0,\n  reviewCount: item.reviewsCount || 0,\n  categories: (item.categories || []).join(', '),\n  googleMapsUrl: item.url || 'N/A',\n  industry: $('Configure Search').item.json.industry\n};"
+      },
+      "id": "extract",
+      "name": "Extract Business Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "hasPhone",
+              "leftValue": "={{ $json.phone }}",
+              "rightValue": "N/A",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter",
+      "name": "Filter (Has Phone)",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [880, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [{\n    \"parts\": [{\n      \"text\": \"Score this business 1-10 on their need for AI/automation services. Higher = more likely to buy.\\n\\nBusiness: {{ $json.businessName }}\\nIndustry: {{ $json.industry }}\\nRating: {{ $json.rating }}/5 ({{ $json.reviewCount }} reviews)\\nHas Website: {{ $json.website !== 'N/A' }}\\n\\nRespond with ONLY JSON: {\\\"score\\\": <1-10>, \\\"reason\\\": \\\"<brief reason>\\\"}\"\n    }]\n  }],\n  \"generationConfig\": {\"temperature\": 0.2, \"maxOutputTokens\": 100}\n}",
+        "options": {"timeout": 30000}
+      },
+      "id": "score",
+      "name": "AI Lead Scoring (FREE)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1100, 0],
+      "notes": "Uses Gemini 2.0 Flash - FREE (1500/day)"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const lead = $('Filter (Has Phone)').item.json;\nconst aiResponse = $input.item.json;\n\nlet score = 5;\nlet reason = 'Default';\n\ntry {\n  const text = aiResponse.candidates?.[0]?.content?.parts?.[0]?.text || '{}';\n  const match = text.match(/\\{[\\s\\S]*?\\}/);\n  if (match) {\n    const parsed = JSON.parse(match[0]);\n    score = parsed.score || 5;\n    reason = parsed.reason || 'N/A';\n  }\n} catch(e) {}\n\nreturn {\n  ...lead,\n  leadScore: score,\n  scoreReason: reason,\n  scrapedAt: new Date().toISOString()\n};"
+      },
+      "id": "combine",
+      "name": "Combine Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1320, 0]
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {"fieldName": "leadScore", "order": "descending"}
+          ]
+        },
+        "options": {}
+      },
+      "id": "sort",
+      "name": "Sort by Score",
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [1540, 0]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "aggregate",
+      "name": "Aggregate Results",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [1760, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"totalLeads\": {{ $json.data.length }},\n  \"leads\": {{ JSON.stringify($json.data) }}\n}",
+        "options": {}
+      },
+      "id": "response",
+      "name": "Return Results",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1980, 0]
+    }
+  ],
+  "connections": {
+    "Start Here": {
+      "main": [[{"node": "Configure Search", "type": "main", "index": 0}]]
+    },
+    "Configure Search": {
+      "main": [[{"node": "Scrape Google Maps", "type": "main", "index": 0}]]
+    },
+    "Scrape Google Maps": {
+      "main": [[{"node": "Extract Business Data", "type": "main", "index": 0}]]
+    },
+    "Extract Business Data": {
+      "main": [[{"node": "Filter (Has Phone)", "type": "main", "index": 0}]]
+    },
+    "Filter (Has Phone)": {
+      "main": [[{"node": "AI Lead Scoring (FREE)", "type": "main", "index": 0}]]
+    },
+    "AI Lead Scoring (FREE)": {
+      "main": [[{"node": "Combine Data", "type": "main", "index": 0}]]
+    },
+    "Combine Data": {
+      "main": [[{"node": "Sort by Score", "type": "main", "index": 0}]]
+    },
+    "Sort by Score": {
+      "main": [[{"node": "Aggregate Results", "type": "main", "index": 0}]]
+    },
+    "Aggregate Results": {
+      "main": [[{"node": "Return Results", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "versionId": "5vault-lead-gen-v1",
+  "active": false,
+  "tags": [{"name": "$5 Vault"}, {"name": "Lead Generation"}]
+}

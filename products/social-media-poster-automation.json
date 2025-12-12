@@ -1,0 +1,249 @@
+{
+  "name": "$5 Vault - Social Media Poster Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "social-post",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "Start Here",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "social-post-5vault"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "content",
+              "name": "originalContent",
+              "value": "={{ $json.body?.content || $json.content || 'Check out our latest update!' }}",
+              "type": "string"
+            },
+            {
+              "id": "platforms",
+              "name": "platforms",
+              "value": "={{ $json.body?.platforms || $json.platforms || 'twitter,linkedin' }}",
+              "type": "string"
+            },
+            {
+              "id": "tone",
+              "name": "tone",
+              "value": "={{ $json.body?.tone || $json.tone || 'professional' }}",
+              "type": "string"
+            },
+            {
+              "id": "includeHashtags",
+              "name": "includeHashtags",
+              "value": "={{ $json.body?.includeHashtags !== false }}",
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      "id": "config",
+      "name": "Configure Post",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [{\n    \"parts\": [{\n      \"text\": \"You are a social media expert. Adapt this content for multiple platforms.\\n\\nOriginal Content: {{ $json.originalContent }}\\nPlatforms: {{ $json.platforms }}\\nTone: {{ $json.tone }}\\nInclude Hashtags: {{ $json.includeHashtags }}\\n\\nCreate optimized versions for each platform. Requirements:\\n- Twitter/X: 280 chars max, punchy, engaging\\n- LinkedIn: Professional, 1-2 paragraphs, industry focused\\n- Instagram: Engaging caption, emoji-friendly\\n- Facebook: Conversational, shareable\\n\\nRespond with ONLY valid JSON:\\n{\\n  \\\"twitter\\\": {\\\"text\\\": \\\"...\\\", \\\"hashtags\\\": [\\\"...\\\"]},\\n  \\\"linkedin\\\": {\\\"text\\\": \\\"...\\\", \\\"hashtags\\\": [\\\"...\\\"]},\\n  \\\"instagram\\\": {\\\"caption\\\": \\\"...\\\", \\\"hashtags\\\": [\\\"...\\\"]},\\n  \\\"facebook\\\": {\\\"text\\\": \\\"...\\\"}\\n}\"\n    }]\n  }],\n  \"generationConfig\": {\"temperature\": 0.7, \"maxOutputTokens\": 1500}\n}",
+        "options": {"timeout": 45000}
+      },
+      "id": "gemini",
+      "name": "AI Content Adapter (FREE)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 0],
+      "notes": "Uses Gemini 2.0 Flash - FREE (1500/day)"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const config = $('Configure Post').item.json;\nconst aiResponse = $input.item.json;\n\nlet posts = {\n  twitter: { text: config.originalContent.substring(0, 280), hashtags: [] },\n  linkedin: { text: config.originalContent, hashtags: [] },\n  instagram: { caption: config.originalContent, hashtags: [] },\n  facebook: { text: config.originalContent }\n};\n\ntry {\n  const text = aiResponse.candidates?.[0]?.content?.parts?.[0]?.text || '{}';\n  const match = text.match(/\\{[\\s\\S]*\\}/);\n  if (match) {\n    posts = JSON.parse(match[0]);\n  }\n} catch(e) {}\n\nconst requestedPlatforms = config.platforms.split(',').map(p => p.trim().toLowerCase());\nconst filteredPosts = {};\n\nfor (const platform of requestedPlatforms) {\n  if (posts[platform]) {\n    filteredPosts[platform] = posts[platform];\n  }\n}\n\nreturn {\n  originalContent: config.originalContent,\n  tone: config.tone,\n  posts: filteredPosts,\n  platformCount: Object.keys(filteredPosts).length,\n  generatedAt: new Date().toISOString()\n};"
+      },
+      "id": "parse",
+      "name": "Parse & Filter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "hasTwitter",
+              "leftValue": "={{ $json.posts.twitter }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "checkTwitter",
+      "name": "Has Twitter?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [880, -100]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "hasLinkedIn",
+              "leftValue": "={{ $json.posts.linkedin }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "checkLinkedIn",
+      "name": "Has LinkedIn?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [880, 100]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Placeholder for Twitter API integration\n// User needs to add their own Twitter API credentials\nconst post = $('Parse & Filter').item.json.posts.twitter;\n\nreturn {\n  platform: 'twitter',\n  status: 'ready_to_post',\n  content: post.text,\n  hashtags: post.hashtags || [],\n  instructions: 'Connect Twitter API or copy this content to post manually',\n  apiEndpoint: 'POST https://api.twitter.com/2/tweets'\n};"
+      },
+      "id": "twitterPost",
+      "name": "Twitter Post Ready",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1100, -100],
+      "notes": "Add your Twitter API credentials to auto-post"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Placeholder for LinkedIn API integration\n// User needs to add their own LinkedIn API credentials\nconst post = $('Parse & Filter').item.json.posts.linkedin;\n\nreturn {\n  platform: 'linkedin',\n  status: 'ready_to_post',\n  content: post.text,\n  hashtags: post.hashtags || [],\n  instructions: 'Connect LinkedIn API or copy this content to post manually',\n  apiEndpoint: 'POST https://api.linkedin.com/v2/ugcPosts'\n};"
+      },
+      "id": "linkedinPost",
+      "name": "LinkedIn Post Ready",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1100, 100],
+      "notes": "Add your LinkedIn API credentials to auto-post"
+    },
+    {
+      "parameters": {
+        "mode": "multiplex",
+        "mergeByFields": {
+          "values": []
+        },
+        "options": {}
+      },
+      "id": "merge",
+      "name": "Merge Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [1320, 0]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "aggregate",
+      "name": "Aggregate Posts",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [1540, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Social posts generated for {{ $('Parse & Filter').item.json.platformCount }} platforms\",\n  \"posts\": {{ JSON.stringify($json.data) }},\n  \"generatedAt\": \"{{ $('Parse & Filter').item.json.generatedAt }}\"\n}",
+        "options": {}
+      },
+      "id": "response",
+      "name": "Return Results",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1760, 0]
+    }
+  ],
+  "connections": {
+    "Start Here": {
+      "main": [[{"node": "Configure Post", "type": "main", "index": 0}]]
+    },
+    "Configure Post": {
+      "main": [[{"node": "AI Content Adapter (FREE)", "type": "main", "index": 0}]]
+    },
+    "AI Content Adapter (FREE)": {
+      "main": [[{"node": "Parse & Filter", "type": "main", "index": 0}]]
+    },
+    "Parse & Filter": {
+      "main": [
+        [
+          {"node": "Has Twitter?", "type": "main", "index": 0},
+          {"node": "Has LinkedIn?", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "Has Twitter?": {
+      "main": [
+        [{"node": "Twitter Post Ready", "type": "main", "index": 0}],
+        []
+      ]
+    },
+    "Has LinkedIn?": {
+      "main": [
+        [{"node": "LinkedIn Post Ready", "type": "main", "index": 0}],
+        []
+      ]
+    },
+    "Twitter Post Ready": {
+      "main": [[{"node": "Merge Results", "type": "main", "index": 0}]]
+    },
+    "LinkedIn Post Ready": {
+      "main": [[{"node": "Merge Results", "type": "main", "index": 1}]]
+    },
+    "Merge Results": {
+      "main": [[{"node": "Aggregate Posts", "type": "main", "index": 0}]]
+    },
+    "Aggregate Posts": {
+      "main": [[{"node": "Return Results", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "versionId": "5vault-social-poster-v1",
+  "active": false,
+  "tags": [{"name": "$5 Vault"}, {"name": "Social Media"}]
+}

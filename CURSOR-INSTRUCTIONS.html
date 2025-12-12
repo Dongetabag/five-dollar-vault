@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$5 Vault - Cursor AI Setup Instructions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            background: #0d1117;
+            color: #c9d1d9;
+            line-height: 1.6;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #10B981;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #10B981;
+            padding-bottom: 10px;
+        }
+        .subtitle {
+            color: #8b949e;
+            margin-bottom: 40px;
+        }
+        .step {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .step-number {
+            background: #10B981;
+            color: #000;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .step-title {
+            color: #f0f6fc;
+            font-size: 1.2rem;
+        }
+        .step-description {
+            color: #8b949e;
+            margin-bottom: 16px;
+        }
+        .code-block {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        .code-block code {
+            color: #79c0ff;
+            font-size: 0.9rem;
+        }
+        .file-path {
+            color: #ffa657;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        .command {
+            color: #a5d6ff;
+        }
+        .comment {
+            color: #8b949e;
+        }
+        .important {
+            background: #1f2428;
+            border-left: 4px solid #f85149;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .success {
+            background: #1f2428;
+            border-left: 4px solid #10B981;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .checklist {
+            list-style: none;
+            margin: 16px 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+            padding-left: 28px;
+            position: relative;
+        }
+        .checklist li::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: #10B981;
+        }
+        .env-var {
+            color: #7ee787;
+        }
+        .string {
+            color: #a5d6ff;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #30363d;
+            margin: 40px 0;
+        }
+        .section-title {
+            color: #10B981;
+            font-size: 1.5rem;
+            margin: 40px 0 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        th, td {
+            border: 1px solid #30363d;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #21262d;
+            color: #f0f6fc;
+        }
+        a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏦 $5 Vault - Cursor AI Setup Instructions</h1>
+        <p class="subtitle">Copy these instructions into Cursor to automate the complete setup</p>
+
+        <!-- ========== SECTION 1: HOSTING ========== -->
+        <h2 class="section-title">PART 1: Deploy Website to Vercel</h2>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div class="step-title">Initialize Git Repository</div>
+            </div>
+            <div class="step-description">Create a git repo in the five-dollar-vault folder</div>
+            <div class="code-block">
+                <code>
+<span class="command">cd /Users/simeonreid/AiSim\ Virtual\ Workspace/five-dollar-vault</span>
+<span class="command">git init</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m "Initial commit - $5 Vault website"</span>
+                </code>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div class="step-title">Create GitHub Repository</div>
+            </div>
+            <div class="step-description">Push to GitHub using the gh CLI</div>
+            <div class="code-block">
+                <code>
+<span class="command">gh repo create five-dollar-vault --public --source=. --push</span>
+                </code>
+            </div>
+            <div class="important">
+                <strong>Note:</strong> Make sure GitHub CLI is authenticated. Run <code>gh auth login</code> if needed.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div class="step-title">Deploy to Vercel</div>
+            </div>
+            <div class="step-description">Install Vercel CLI and deploy</div>
+            <div class="code-block">
+                <code>
+<span class="command">npm install -g vercel</span>
+<span class="command">vercel login</span>
+<span class="command">vercel --prod</span>
+                </code>
+            </div>
+            <div class="success">
+                <strong>Result:</strong> You'll get a URL like <code>five-dollar-vault.vercel.app</code>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <div class="step-title">Connect Custom Domain (Optional)</div>
+            </div>
+            <div class="step-description">If you have a domain like 5dollarvault.com</div>
+            <div class="code-block">
+                <code>
+<span class="command">vercel domains add 5dollarvault.com</span>
+<span class="comment"># Then add these DNS records at your registrar:</span>
+<span class="comment"># A Record: @ -> 76.76.21.21</span>
+<span class="comment"># CNAME: www -> cname.vercel-dns.com</span>
+                </code>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ========== SECTION 2: DISCORD ========== -->
+        <h2 class="section-title">PART 2: Create Discord Server</h2>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <div class="step-title">Create Discord Bot for Automation</div>
+            </div>
+            <div class="step-description">Go to Discord Developer Portal and create a bot</div>
+            <div class="code-block">
+                <code>
+<span class="comment"># 1. Go to: https://discord.com/developers/applications</span>
+<span class="comment"># 2. Click "New Application" -> Name it "$5 Vault Bot"</span>
+<span class="comment"># 3. Go to "Bot" tab -> Click "Add Bot"</span>
+<span class="comment"># 4. Copy the TOKEN (save it securely)</span>
+<span class="comment"># 5. Enable these Intents:</span>
+<span class="comment">#    - SERVER MEMBERS INTENT</span>
+<span class="comment">#    - MESSAGE CONTENT INTENT</span>
+                </code>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">6</div>
+                <div class="step-title">Create Discord Server Structure</div>
+            </div>
+            <div class="step-description">Create server with this exact channel structure</div>
+            <div class="code-block">
+                <code>
+<span class="comment"># Server Name: $5 Vault Community</span>
+
+<span class="comment"># CATEGORY: 📢 ANNOUNCEMENTS</span>
+#welcome
+#rules
+#new-releases
+#community-wins
+
+<span class="comment"># CATEGORY: 💬 GENERAL</span>
+#introductions
+#general-chat
+#show-your-work
+#questions
+
+<span class="comment"># CATEGORY: 📦 PRODUCTS</span>
+#prompt-support
+#automation-support
+#feature-requests
+#bug-reports
+
+<span class="comment"># CATEGORY: 🎓 LEARNING</span>
+#tips-and-tricks
+#tutorials
+#resources
+
+<span class="comment"># CATEGORY: 💎 MEMBERS ONLY (Role-gated to @Member)</span>
+#vip-lounge
+#early-access
+#monthly-qa
+#custom-requests
+
+<span class="comment"># CATEGORY: 🛠️ SUPPORT</span>
+#tech-help
+#billing
+                </code>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">7</div>
+                <div class="step-title">Create Discord Roles</div>
+            </div>
+            <div class="step-description">Set up roles with these colors and permissions</div>
+            <table>
+                <tr>
+                    <th>Role Name</th>
+                    <th>Color</th>
+                    <th>Access</th>
+                </tr>
+                <tr>
+                    <td>@Customer</td>
+                    <td>#10B981 (Green)</td>
+                    <td>Product channels</td>
+                </tr>
+                <tr>
+                    <td>@Bundle Owner</td>
+                    <td>#3B82F6 (Blue)</td>
+                    <td>Extended support</td>
+                </tr>
+                <tr>
+                    <td>@Member</td>
+                    <td>#8B5CF6 (Purple)</td>
+                    <td>VIP channels</td>
+                </tr>
+                <tr>
+                    <td>@VIP</td>
+                    <td>#F59E0B (Gold)</td>
+                    <td>Everything + DMs</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">8</div>
+                <div class="step-title">Get Discord Invite Link</div>
+            </div>
+            <div class="step-description">Create a permanent invite link for the website</div>
+            <div class="code-block">
+                <code>
+<span class="comment"># 1. Right-click #welcome channel</span>
+<span class="comment"># 2. Click "Create Invite"</span>
+<span class="comment"># 3. Set to "Never Expire"</span>
+<span class="comment"># 4. Copy link (e.g., https://discord.gg/5vault)</span>
+                </code>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ========== SECTION 3: EMAIL AUTOMATION ========== -->
+        <h2 class="section-title">PART 3: Set Up Email Automation (ConvertKit)</h2>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">9</div>
+                <div class="step-title">Create ConvertKit Account</div>
+            </div>
+            <div class="step-description">Sign up at convertkit.com (free up to 1,000 subscribers)</div>
+            <div class="code-block">
+                <code>
+<span class="comment"># 1. Go to: https://convertkit.com</span>
+<span class="comment"># 2. Sign up for free plan</span>
+<span class="comment"># 3. Go to Settings -> Advanced -> API</span>
+<span class="comment"># 4. Copy your API Key and API Secret</span>
+                </code>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">10</div>
+                <div class="step-title">Create Email Sequences</div>
+            </div>
+            <div class="step-description">Build these 4 automated sequences</div>
+
+            <div class="file-path">SEQUENCE 1: Post-Purchase Welcome (Trigger: Any $5 purchase)</div>
+            <div class="code-block">
+                <code>
+<span class="comment"># Email 1 (Immediate):</span>
+Subject: Your $5 Vault download is ready! 🎉
+- Deliver the product
+- Invite to Discord
+- Soft pitch Ultimate Bundle ($25)
+
+<span class="comment"># Email 2 (24 hours later):</span>
+Subject: Quick tip for your new [PRODUCT]
+- Usage tip
+- Success story
+- Bundle reminder
+
+<span class="comment"># Email 3 (48 hours later):</span>
+Subject: Last chance: 10 tools for $25
+- Urgency/scarcity
+- Final bundle push
+                </code>
+            </div>
+
+            <div class="file-path">SEQUENCE 2: Bundle Buyer (Trigger: $25 bundle purchase)</div>
+            <div class="code-block">
+                <code>
+<span class="comment"># Email 1 (Immediate):</span>
+Subject: Your Ultimate Bundle is ready!
+- Deliver all products
+- Setup guide
+- Discord VIP access
+
+<span class="comment"># Email 2 (3 days later):</span>
+Subject: Getting the most from your bundle
+- Top 3 products to start with
+- Community showcase
+
+<span class="comment"># Email 3 (7 days later):</span>
+Subject: Ready for unlimited access?
+- Pitch membership ($47/mo)
+- Member benefits
+                </code>
+            </div>
+
+            <div class="file-path">SEQUENCE 3: Membership Onboarding (Trigger: $47/mo subscription)</div>
+            <div class="code-block">
+                <code>
+<span class="comment"># Email 1 (Immediate):</span>
+Subject: Welcome to the $5 Vault membership!
+- Full access instructions
+- Discord @Member role
+- Monthly Q&A schedule
+
+<span class="comment"># Email 2 (Weekly - ongoing):</span>
+Subject: This week's new releases
+- New products
+- Community highlights
+- Upcoming features
+                </code>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">11</div>
+                <div class="step-title">Connect Stripe to ConvertKit</div>
+            </div>
+            <div class="step-description">Use Zapier or n8n to trigger emails on purchase</div>
+            <div class="code-block">
+                <code>
+<span class="comment"># Option A: Zapier (Easiest)</span>
+<span class="comment"># 1. Create Zap: Stripe -> ConvertKit</span>
+<span class="comment"># 2. Trigger: "New Payment" in Stripe</span>
+<span class="comment"># 3. Action: "Add Subscriber to Sequence" in ConvertKit</span>
+
+<span class="comment"># Option B: n8n Workflow (Free)</span>
+<span class="comment"># Create workflow with:</span>
+<span class="comment"># - Stripe Webhook trigger (checkout.session.completed)</span>
+<span class="comment"># - HTTP Request to ConvertKit API</span>
+<span class="comment"># - Add subscriber + tag based on product purchased</span>
+                </code>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ========== SECTION 4: STRIPE WEBHOOKS ========== -->
+        <h2 class="section-title">PART 4: Configure Stripe Webhooks</h2>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">12</div>
+                <div class="step-title">Create Stripe Webhook Endpoint</div>
+            </div>
+            <div class="step-description">Set up webhook to track purchases</div>
+            <div class="code-block">
+                <code>
+<span class="comment"># 1. Go to: https://dashboard.stripe.com/webhooks</span>
+<span class="comment"># 2. Click "Add endpoint"</span>
+<span class="comment"># 3. URL: https://your-n8n-instance.com/webhook/stripe-purchase</span>
+<span class="comment"># 4. Select events:</span>
+<span class="comment">#    - checkout.session.completed</span>
+<span class="comment">#    - customer.subscription.created</span>
+<span class="comment">#    - customer.subscription.deleted</span>
+<span class="comment"># 5. Copy the Webhook Signing Secret</span>
+                </code>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">13</div>
+                <div class="step-title">Create n8n Purchase Handler Workflow</div>
+            </div>
+            <div class="step-description">Build this workflow to handle all purchases</div>
+            <div class="file-path">Save as: /five-dollar-vault/workflows/purchase-handler.json</div>
+            <div class="code-block">
+                <code>
+{
+  "name": "$5 Vault - Purchase Handler",
+  "nodes": [
+    {
+      "name": "Stripe Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "stripe-purchase",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "name": "Identify Product",
+      "type": "n8n-nodes-base.switch",
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.data.object.amount_total }}",
+        "rules": {
+          "rules": [
+            {"value2": "500", "output": 0},
+            {"value2": "2500", "output": 1},
+            {"value2": "4700", "output": 2}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Tag: $5 Product",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.convertkit.com/v3/tags/[TAG_ID]/subscribe",
+        "body": {
+          "api_key": "{{ $env.CONVERTKIT_API_KEY }}",
+          "email": "={{ $json.data.object.customer_details.email }}"
+        }
+      }
+    },
+    {
+      "name": "Tag: Bundle Buyer",
+      "type": "n8n-nodes-base.httpRequest"
+    },
+    {
+      "name": "Tag: Member",
+      "type": "n8n-nodes-base.httpRequest"
+    },
+    {
+      "name": "Generate Discord Invite",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://discord.com/api/v10/channels/[CHANNEL_ID]/invites",
+        "headers": {
+          "Authorization": "Bot {{ $env.DISCORD_BOT_TOKEN }}"
+        },
+        "body": {
+          "max_age": 604800,
+          "max_uses": 1,
+          "unique": true
+        }
+      }
+    },
+    {
+      "name": "Send Welcome Email",
+      "type": "n8n-nodes-base.httpRequest"
+    },
+    {
+      "name": "Log to Airtable",
+      "type": "n8n-nodes-base.airtable"
+    }
+  ]
+}
+                </code>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ========== SECTION 5: UPDATE WEBSITE ========== -->
+        <h2 class="section-title">PART 5: Update Website with Live Links</h2>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">14</div>
+                <div class="step-title">Update index.html with Discord Link</div>
+            </div>
+            <div class="step-description">Replace placeholder Discord link</div>
+            <div class="file-path">File: /five-dollar-vault/index.html</div>
+            <div class="code-block">
+                <code>
+<span class="comment">/* Find and replace this line: */</span>
+&lt;a href="#discord" class="cta-secondary"&gt;Join Discord&lt;/a&gt;
+
+<span class="comment">/* Replace with your actual Discord invite: */</span>
+&lt;a href="https://discord.gg/YOUR_INVITE_CODE" class="cta-secondary" target="_blank"&gt;Join Discord&lt;/a&gt;
+                </code>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">15</div>
+                <div class="step-title">Add Analytics Tracking</div>
+            </div>
+            <div class="step-description">Add Google Analytics or Plausible</div>
+            <div class="file-path">Add to &lt;head&gt; section of index.html</div>
+            <div class="code-block">
+                <code>
+<span class="comment">&lt;!-- Google Analytics --&gt;</span>
+&lt;script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"&gt;&lt;/script&gt;
+&lt;script&gt;
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+&lt;/script&gt;
+
+<span class="comment">&lt;!-- OR Plausible (privacy-friendly) --&gt;</span>
+&lt;script defer data-domain="5dollarvault.com" src="https://plausible.io/js/script.js"&gt;&lt;/script&gt;
+                </code>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">16</div>
+                <div class="step-title">Deploy Updates</div>
+            </div>
+            <div class="step-description">Push changes to production</div>
+            <div class="code-block">
+                <code>
+<span class="command">cd /Users/simeonreid/AiSim\ Virtual\ Workspace/five-dollar-vault</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m "Add Discord link and analytics"</span>
+<span class="command">git push origin main</span>
+<span class="comment"># Vercel will auto-deploy</span>
+                </code>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ========== SECTION 6: LAUNCH CHECKLIST ========== -->
+        <h2 class="section-title">PART 6: Launch Checklist</h2>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">✓</div>
+                <div class="step-title">Final Launch Checklist</div>
+            </div>
+            <ul class="checklist">
+                <li>Website deployed and accessible</li>
+                <li>All 7 Stripe payment links working</li>
+                <li>Discord server created with all channels</li>
+                <li>Discord roles configured</li>
+                <li>Discord invite link added to website</li>
+                <li>ConvertKit account created</li>
+                <li>Email sequences built (welcome, upsell, membership)</li>
+                <li>Stripe webhooks configured</li>
+                <li>n8n purchase handler workflow active</li>
+                <li>Analytics tracking installed</li>
+                <li>Test purchase completed successfully</li>
+                <li>Product files ready for delivery</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <!-- ========== ENVIRONMENT VARIABLES ========== -->
+        <h2 class="section-title">Environment Variables Needed</h2>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">ENV</div>
+                <div class="step-title">Required Environment Variables</div>
+            </div>
+            <div class="step-description">Add these to your n8n instance or .env file</div>
+            <div class="code-block">
+                <code>
+<span class="comment"># Stripe</span>
+<span class="env-var">STRIPE_SECRET_KEY</span>=<span class="string">sk_live_...</span>
+<span class="env-var">STRIPE_WEBHOOK_SECRET</span>=<span class="string">whsec_...</span>
+
+<span class="comment"># Discord</span>
+<span class="env-var">DISCORD_BOT_TOKEN</span>=<span class="string">your_bot_token</span>
+<span class="env-var">DISCORD_WELCOME_CHANNEL_ID</span>=<span class="string">channel_id</span>
+
+<span class="comment"># ConvertKit</span>
+<span class="env-var">CONVERTKIT_API_KEY</span>=<span class="string">your_api_key</span>
+<span class="env-var">CONVERTKIT_API_SECRET</span>=<span class="string">your_api_secret</span>
+
+<span class="comment"># Gemini (for automations)</span>
+<span class="env-var">GEMINI_API_KEY</span>=<span class="string">your_gemini_key</span>
+
+<span class="comment"># Airtable (optional - for tracking)</span>
+<span class="env-var">AIRTABLE_API_KEY</span>=<span class="string">your_airtable_key</span>
+<span class="env-var">AIRTABLE_BASE_ID</span>=<span class="string">your_base_id</span>
+                </code>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ========== STRIPE PRODUCT IDS ========== -->
+        <h2 class="section-title">Reference: Stripe Product IDs</h2>
+
+        <div class="step">
+            <table>
+                <tr>
+                    <th>Product</th>
+                    <th>Product ID</th>
+                    <th>Price ID</th>
+                    <th>Payment Link</th>
+                </tr>
+                <tr>
+                    <td>Business Essentials</td>
+                    <td>prod_Taij909KS4nz0r</td>
+                    <td>price_1SdXJyB3und2NTG3dY0uDNum</td>
+                    <td><a href="https://buy.stripe.com/00w9ASfz91kqgMFbgvcZa03">Link</a></td>
+                </tr>
+                <tr>
+                    <td>Lead Generator</td>
+                    <td>prod_Taij1tBP2iFQ4o</td>
+                    <td>price_1SdXL3B3und2NTG3mP6WFxga</td>
+                    <td><a href="https://buy.stripe.com/eVq6oGcmXe7c3ZTacrcZa04">Link</a></td>
+                </tr>
+                <tr>
+                    <td>Content Creator</td>
+                    <td>prod_TaijFNwKwaDPPL</td>
+                    <td>price_1SdXLAB3und2NTG3krrAsSM5</td>
+                    <td><a href="https://buy.stripe.com/dRm3cucmXbZ4eEx58ncZa05">Link</a></td>
+                </tr>
+                <tr>
+                    <td>Social Media Poster</td>
+                    <td>prod_TaijQkDAj4LcXC</td>
+                    <td>price_1SdXLFB3und2NTG3ncGJiNHy</td>
+                    <td><a href="https://buy.stripe.com/fZu6oGcmX5AG53X84jcZa06">Link</a></td>
+                </tr>
+                <tr>
+                    <td>Starter Bundle</td>
+                    <td>prod_TaijBZ9kMJjvTr</td>
+                    <td>price_1SdXLJB3und2NTG3jgC7NOwT</td>
+                    <td><a href="https://buy.stripe.com/5kQdR81Ij4wC2VP1FVcZa07">Link</a></td>
+                </tr>
+                <tr>
+                    <td>Ultimate Bundle</td>
+                    <td>prod_Tain9e7xwf9vVp</td>
+                    <td>price_1SdXLzB3und2NTG3gsLSmwHW</td>
+                    <td><a href="https://buy.stripe.com/fZubJ0cmXaV0cwp70fcZa08">Link</a></td>
+                </tr>
+                <tr>
+                    <td>Membership ($47/mo)</td>
+                    <td>prod_TainirEKaM5thb</td>
+                    <td>price_1SdXMAB3und2NTG3CAR6AN4d</td>
+                    <td><a href="https://buy.stripe.com/fZubJ0cmXaV0cwp70fcZa09">Link</a></td>
+                </tr>
+            </table>
+        </div>
+
+        <hr>
+
+        <div class="success" style="text-align: center; padding: 24px;">
+            <strong>🎉 Once all steps are complete, your $5 Vault is LIVE!</strong><br><br>
+            Start promoting on TikTok, YouTube Shorts, and Twitter to drive traffic.
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The $5 Vault | AI Prompts & Automations at Coffee Prices</title>
+    <meta name="description" content="Premium ChatGPT prompts and n8n automations for just $5. Everything you need to automate your business without breaking the bank.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green: #10B981;
+            --green-dark: #059669;
+            --gold: #F59E0B;
+            --dark: #111827;
+            --gray: #1F2937;
+            --gray-light: #374151;
+            --white: #F9FAFB;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--gray-light);
+            position: sticky;
+            top: 0;
+            background: var(--dark);
+            z-index: 100;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        .logo span {
+            color: var(--white);
+        }
+
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--green);
+        }
+
+        .btn-membership {
+            background: var(--green);
+            color: var(--dark);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .btn-membership:hover {
+            background: var(--green-dark);
+            color: var(--white);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--gray);
+            color: var(--gold);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 .highlight {
+            color: var(--green);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #9CA3AF;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--green);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            background: var(--green-dark);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+            color: var(--white);
+            border: 2px solid var(--gray-light);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--green);
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            padding: 40px 0;
+            border-top: 1px solid var(--gray-light);
+            border-bottom: 1px solid var(--gray-light);
+            margin: 40px 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        .stat-label {
+            color: #9CA3AF;
+            font-size: 0.875rem;
+        }
+
+        /* Products Section */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            color: #9CA3AF;
+            font-size: 1.125rem;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background: var(--gray);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--gray-light);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            border-color: var(--green);
+            transform: translateY(-4px);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--gold);
+            color: var(--dark);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .product-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--green);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+        }
+
+        .product-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .product-card p {
+            color: #9CA3AF;
+            font-size: 0.875rem;
+            margin-bottom: 16px;
+            min-height: 60px;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        .product-price span {
+            font-size: 0.875rem;
+            color: #9CA3AF;
+            font-weight: 400;
+        }
+
+        .btn-buy {
+            background: var(--green);
+            color: var(--dark);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .btn-buy:hover {
+            background: var(--green-dark);
+            color: var(--white);
+        }
+
+        /* Membership CTA */
+        .membership-cta {
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+            border-radius: 24px;
+            padding: 60px;
+            text-align: center;
+            margin: 80px 0;
+        }
+
+        .membership-cta h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 16px;
+        }
+
+        .membership-cta p {
+            color: var(--dark);
+            font-size: 1.125rem;
+            margin-bottom: 32px;
+            opacity: 0.9;
+        }
+
+        .membership-price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .membership-price span {
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .membership-features {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin: 32px 0;
+            flex-wrap: wrap;
+        }
+
+        .membership-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .btn-membership-cta {
+            background: var(--dark);
+            color: var(--green);
+            padding: 16px 48px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.125rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-membership-cta:hover {
+            background: var(--gray);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 32px;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--green);
+            color: var(--dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin: 0 auto 16px;
+        }
+
+        .step h3 {
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            color: #9CA3AF;
+            font-size: 0.875rem;
+        }
+
+        /* FAQ */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .faq-item {
+            background: var(--gray);
+            padding: 24px;
+            border-radius: 12px;
+        }
+
+        .faq-item h3 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: var(--green);
+        }
+
+        .faq-item p {
+            color: #9CA3AF;
+            font-size: 0.875rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--gray-light);
+            text-align: center;
+            color: #9CA3AF;
+        }
+
+        footer a {
+            color: var(--green);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .how-it-works {
+                grid-template-columns: 1fr;
+            }
+
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .membership-cta {
+                padding: 40px 24px;
+            }
+
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-inner">
+            <div class="logo">$5<span>Vault</span></div>
+            <nav>
+                <a href="#products">Products</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#faq">FAQ</a>
+                <a href="https://buy.stripe.com/fZubJ0cmXaV0cwp70fcZa09" class="btn-membership">Join Membership</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">Everything is just $5</div>
+            <h1>AI Prompts & Automations<br>at <span class="highlight">Coffee Prices</span></h1>
+            <p>Premium ChatGPT prompts, Claude templates, and n8n automations to supercharge your business. No subscriptions. No upsells. Just $5.</p>
+            <div class="hero-cta">
+                <a href="#products" class="btn btn-primary">Browse Products</a>
+                <a href="https://buy.stripe.com/fZubJ0cmXaV0cwp70fcZa09" class="btn btn-secondary">Get Unlimited Access - $47/mo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="container">
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Premium Prompts</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">n8n Automations</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">$5</div>
+                <div class="stat-label">Everything</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Instant Access</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products -->
+    <section class="section" id="products">
+        <div class="container">
+            <div class="section-header">
+                <h2>The Vault</h2>
+                <p>Premium tools at the price of a coffee. Pick what you need.</p>
+            </div>
+
+            <div class="product-grid">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <div class="product-badge">BEST SELLER</div>
+                    <div class="product-icon">📝</div>
+                    <h3>Business Essentials Prompts</h3>
+                    <p>10 battle-tested ChatGPT/Claude prompts for sales, marketing, and operations. Instantly download and start using.</p>
+                    <div class="product-meta">
+                        <div class="product-price">$5 <span>one-time</span></div>
+                        <a href="https://buy.stripe.com/00w9ASfz91kqgMFbgvcZa03" class="btn-buy">Get It</a>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <div class="product-badge">AUTOMATION</div>
+                    <div class="product-icon">🤖</div>
+                    <h3>Lead Generator Automation</h3>
+                    <p>Ready-to-import n8n workflow that scrapes and scores leads automatically. Works with free APIs.</p>
+                    <div class="product-meta">
+                        <div class="product-price">$5 <span>one-time</span></div>
+                        <a href="https://buy.stripe.com/eVq6oGcmXe7c3ZTacrcZa04" class="btn-buy">Get It</a>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card">
+                    <div class="product-icon">✍️</div>
+                    <h3>Content Creator Prompts</h3>
+                    <p>15 prompts for blog posts, social media, video scripts, and email sequences. Professional quality output.</p>
+                    <div class="product-meta">
+                        <div class="product-price">$5 <span>one-time</span></div>
+                        <a href="https://buy.stripe.com/dRm3cucmXbZ4eEx58ncZa05" class="btn-buy">Get It</a>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card">
+                    <div class="product-badge">AUTOMATION</div>
+                    <div class="product-icon">📱</div>
+                    <h3>Social Media Poster</h3>
+                    <p>Automated social media content creation and scheduling workflow for n8n. Posts to multiple platforms.</p>
+                    <div class="product-meta">
+                        <div class="product-price">$5 <span>one-time</span></div>
+                        <a href="https://buy.stripe.com/fZu6oGcmX5AG53X84jcZa06" class="btn-buy">Get It</a>
+                    </div>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="product-card">
+                    <div class="product-badge">STARTER</div>
+                    <div class="product-icon">🚀</div>
+                    <h3>Starter Bundle</h3>
+                    <p>Perfect starter pack: 5 essential prompts plus 1 n8n automation. Everything you need to get started with AI.</p>
+                    <div class="product-meta">
+                        <div class="product-price">$5 <span>one-time</span></div>
+                        <a href="https://buy.stripe.com/5kQdR81Ij4wC2VP1FVcZa07" class="btn-buy">Get It</a>
+                    </div>
+                </div>
+
+                <!-- Product 6 - Bundle -->
+                <div class="product-card" style="border-color: var(--gold);">
+                    <div class="product-badge" style="background: var(--green);">BEST VALUE</div>
+                    <div class="product-icon" style="background: var(--gold);">💎</div>
+                    <h3>Ultimate Bundle</h3>
+                    <p>25 premium prompts + 5 n8n automations. Save 50% vs buying individually. Lifetime access to everything.</p>
+                    <div class="product-meta">
+                        <div class="product-price" style="color: var(--gold);">$25 <span>one-time</span></div>
+                        <a href="https://buy.stripe.com/fZu7sKfz99QWeEx4S7cZa08" class="btn-buy" style="background: var(--gold);">Get Bundle</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Membership CTA -->
+    <div class="container">
+        <div class="membership-cta">
+            <h2>Want Everything?</h2>
+            <p>Get unlimited access to every prompt, automation, and template in the vault. New products added weekly.</p>
+            <div class="membership-price">$47<span>/month</span></div>
+            <div class="membership-features">
+                <div class="membership-feature">✓ 50+ Prompts</div>
+                <div class="membership-feature">✓ 15+ Automations</div>
+                <div class="membership-feature">✓ New Weekly Releases</div>
+                <div class="membership-feature">✓ Discord Community</div>
+                <div class="membership-feature">✓ Cancel Anytime</div>
+            </div>
+            <a href="https://buy.stripe.com/fZubJ0cmXaV0cwp70fcZa09" class="btn-membership-cta">Start Membership</a>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <section class="section" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Get started in under 2 minutes</p>
+            </div>
+
+            <div class="how-it-works">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Pick Your Product</h3>
+                    <p>Browse our collection of prompts and automations. Everything is $5.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Instant Download</h3>
+                    <p>After payment, you'll get immediate access to download your files.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Start Using</h3>
+                    <p>Copy-paste prompts into ChatGPT/Claude or import automations into n8n.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>FAQ</h2>
+                <p>Common questions answered</p>
+            </div>
+
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>What do I get when I purchase?</h3>
+                    <p>You'll receive instant access to download your files. Prompts come as text/markdown files, automations come as JSON files ready to import into n8n.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Do these work with ChatGPT and Claude?</h3>
+                    <p>Yes! All prompts are tested with both ChatGPT (GPT-4) and Claude. They work with any AI assistant.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What is n8n?</h3>
+                    <p>n8n is a free, open-source workflow automation tool. Our automations are ready-to-import JSON files that you can use immediately.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is there a refund policy?</h3>
+                    <p>Due to the digital nature of our products, all sales are final. But at $5, we're confident you'll love what you get!</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What's included in the membership?</h3>
+                    <p>Unlimited access to everything in the vault, plus new products added weekly, Discord community access, and priority support.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Can I request custom prompts?</h3>
+                    <p>Members can request custom prompts and automations. We add the most requested ones to the vault each week.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p style="margin-bottom: 16px;">
+                <strong style="color: var(--green);">$5 Vault</strong>
+                by <a href="https://recipelabs.co">Recipe Labs</a>
+                · <a href="https://discord.gg/YOUR_INVITE_CODE" target="_blank" rel="noopener noreferrer">Join Discord</a>
+            </p>
+            <p>Atlanta, GA | <a href="mailto:hello@recipelabs.co">hello@recipelabs.co</a></p>
+            <p style="margin-top: 16px; font-size: 0.75rem;">© 2025 Recipe Labs. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Simple Analytics (optional) -->
+    <script>
+        // Track button clicks
+        document.querySelectorAll('a[href*="stripe.com"]').forEach(link => {
+            link.addEventListener('click', function() {
+                console.log('Purchase clicked:', this.href);
+            });
+        });
+    </script>
+</body>
+</html>
