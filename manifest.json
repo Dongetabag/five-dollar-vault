@@ -1,0 +1,42 @@
+{
+  "name": "$5 Vault - AI Prompts & Automations",
+  "short_name": "$5 Vault",
+  "description": "Premium ChatGPT prompts and n8n automations for just $5",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#10B981",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Browse Products",
+      "url": "/#products",
+      "description": "View all $5 products"
+    },
+    {
+      "name": "Join Membership",
+      "url": "https://buy.stripe.com/fZubJ0cmXaV0cwp70fcZa09",
+      "description": "Get unlimited access for $47/month"
+    }
+  ]
+}

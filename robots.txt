@@ -1,0 +1,14 @@
+# $5 Vault - robots.txt
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://five-dollar-vault.vercel.app/sitemap.xml
+
+# Disallow admin/private paths (if any)
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
